@@ -33,6 +33,7 @@ export const renderCanvas = () => {
         div.style.top = `${element.y}px`;
         div.style.width = `${element.width}px`;
         div.style.height = `${element.height}px`;
+        div.style.backgroundColor = "red"
         div.style.transform = `rotate(${element.rotation}deg)`;
         div.style.zIndex = element.zIndex;
         div.style.borderRadius = "10px";
@@ -42,31 +43,228 @@ export const renderCanvas = () => {
             handleRotate(div);
 
             const topright = div.querySelector("#top-right");
+            const topleft = div.querySelector("#top-left");
+            const bottomright = div.querySelector("#bottom-right");
+            const bottomleft = div.querySelector("#bottom-left");
 
+            // Listener for Top right 
             topright.addEventListener("mousedown", (e) => {
                 e.stopPropagation();
 
-                const onMove = (e) => {
-                    const canvasRect = canvas.getBoundingClientRect();
-                    const mousePositionX = e.clientX - canvasRect.left;
-                    const mousePositionY = e.clientY - canvasRect.top
-                    const width = mousePositionX - parseFloat(div.style.left);
-                    const height = mousePositionY - parseFloat(div.style.top)
-                    updateElement(div.dataset.id, { width,height });
+                const canvasRect = canvas.getBoundingClientRect();
+
+                const startMouseX = e.clientX - canvasRect.left;
+                const startMouseY = e.clientY - canvasRect.top;
+
+                const startX = element.x;
+                const startY = element.y;
+                const startWidth = element.width;
+                const startHeight = element.height;
+
+                const fixedBottomY = startY + startHeight;
+
+                const onMove = (ev) => {
+                    const mouseX = ev.clientX - canvasRect.left;
+                    const mouseY = ev.clientY - canvasRect.top;
+
+                    const newWidth = mouseX - startX;
+                    const newHeight = fixedBottomY - mouseY;
+
+                    if (newWidth > 20 && newHeight > 20) {
+                        div.style.width = `${newWidth}px`;
+                        div.style.height = `${newHeight}px`;
+                        div.style.top = `${mouseY}px`;
+                    }
                 };
 
                 document.addEventListener("mousemove", onMove);
 
                 document.addEventListener(
                     "mouseup",
-                    () => {
+                    (ev) => {
                         document.removeEventListener("mousemove", onMove);
+
+                        const mouseX = ev.clientX - canvasRect.left;
+                        const mouseY = ev.clientY - canvasRect.top;
+                        const newWidth = mouseX - startX
+                        const newHeight = fixedBottomY - mouseY
+                        if (newWidth > 20 && newHeight > 20) {
+                            updateElement(element.id, {
+                                width: newWidth,
+                                height: newHeight,
+                                y: mouseY
+                            });
+                        }
+
                     },
                     { once: true }
                 );
             });
-        }
 
+            // Listener for Top Left
+            topleft.addEventListener("mousedown", (e) => {
+                e.stopPropagation();
+
+                const canvasRect = canvas.getBoundingClientRect();
+
+                // const startMouseX = e.clientX - canvasRect.left;
+                // const startMouseY = e.clientY - canvasRect.top;
+
+                const startX = element.x;
+                const startY = element.y;
+                const startWidth = element.width;
+                const startHeight = element.height;
+
+                const fixedRightX = startX + startWidth;
+                const fixedBottomY = startY + startHeight;
+
+                const onMove = (ev) => {
+                    const mouseX = ev.clientX - canvasRect.left;
+                    const mouseY = ev.clientY - canvasRect.top;
+
+                    const newWidth = fixedRightX - mouseX;
+                    const newHeight = fixedBottomY - mouseY;
+
+                    if (newWidth > 20 && newHeight > 20) {
+                        div.style.left = `${mouseX}px`;
+                        div.style.top = `${mouseY}px`;
+                        div.style.width = `${newWidth}px`;
+                        div.style.height = `${newHeight}px`;
+                    }
+                };
+
+                document.addEventListener("mousemove", onMove);
+
+                document.addEventListener(
+                    "mouseup",
+                    (ev) => {
+                        document.removeEventListener("mousemove", onMove);
+
+                        const mouseX = ev.clientX - canvasRect.left;
+                        const mouseY = ev.clientY - canvasRect.top;
+                        const newWidth = fixedRightX - mouseX
+                        const newHeight = fixedBottomY - mouseY
+                        if (newWidth > 20 && newHeight > 20) {
+                            updateElement(element.id, {
+                                x: mouseX,
+                                y: mouseY,
+                                width: newWidth,
+                                height: newHeight
+                            });
+                        }
+
+                    },
+                    { once: true }
+                );
+            });
+
+            // Listener for Bottom Right
+            bottomright.addEventListener("mousedown", (e) => {
+                e.stopPropagation();
+
+                const canvasRect = canvas.getBoundingClientRect();
+
+                const startX = element.x;
+                const startY = element.y;
+                const startWidth = element.width;
+                const startHeight = element.height;
+
+                const startMouseX = e.clientX - canvasRect.left;
+                const startMouseY = e.clientY - canvasRect.top;
+
+                const onMove = (ev) => {
+                    const mouseX = ev.clientX - canvasRect.left;
+                    const mouseY = ev.clientY - canvasRect.top;
+
+                    const newWidth = startWidth + (mouseX - startMouseX);
+                    const newHeight = startHeight + (mouseY - startMouseY);
+
+                    if (newWidth > 20 && newHeight > 20) {
+                        div.style.width = `${newWidth}px`;
+                        div.style.height = `${newHeight}px`;
+                    }
+                };
+
+                document.addEventListener("mousemove", onMove);
+
+                document.addEventListener(
+                    "mouseup",
+                    (ev) => {
+                        document.removeEventListener("mousemove", onMove);
+
+                        const mouseX = ev.clientX - canvasRect.left;
+                        const mouseY = ev.clientY - canvasRect.top;
+                        const newWidth = startWidth + (mouseX - startMouseX)
+                        const newHeight = startHeight + (mouseY - startMouseY)
+                        if (newWidth > 20 && newHeight > 20) {
+                            updateElement(element.id, {
+                                width: startWidth + (mouseX - startMouseX),
+                                height: startHeight + (mouseY - startMouseY)
+                            });
+                        }
+                    },
+                    { once: true }
+                );
+            });
+
+
+            // Listener for bottom left
+            bottomleft.addEventListener("mousedown", (e) => {
+                e.stopPropagation();
+
+                const canvasRect = canvas.getBoundingClientRect();
+
+                const startX = element.x;
+                const startY = element.y;
+                const startWidth = element.width;
+                const startHeight = element.height;
+
+                const startMouseX = e.clientX - canvasRect.left;
+                const startMouseY = e.clientY - canvasRect.top;
+
+                const fixedRightX = startX + startWidth;
+
+                const onMove = (ev) => {
+                    const mouseX = ev.clientX - canvasRect.left;
+                    const mouseY = ev.clientY - canvasRect.top;
+
+                    const newWidth = fixedRightX - mouseX;
+                    const newHeight = startHeight + (mouseY - startMouseY);
+
+                    if (newWidth > 20 && newHeight > 20) {
+                        div.style.left = `${mouseX}px`;
+                        div.style.width = `${newWidth}px`;
+                        div.style.height = `${newHeight}px`;
+                    }
+                };
+
+                document.addEventListener("mousemove", onMove);
+
+                document.addEventListener(
+                    "mouseup",
+                    (ev) => {
+                        document.removeEventListener("mousemove", onMove);
+
+                        const mouseX = ev.clientX - canvasRect.left;
+                        const mouseY = ev.clientY - canvasRect.top;
+                        const newWidth = fixedRightX - mouseX
+                        const newHeight = startHeight + (mouseY - startMouseY)
+                        if (newWidth > 20 && newHeight > 20) {
+                            updateElement(element.id, {
+                                x: mouseX,
+                                width: newWidth,
+                                height: newHeight
+                            });
+                        }
+
+                    },
+                    { once: true }
+                );
+            });
+
+            
+
+        }
 
         div.classList.add(isSelected ? "cursor-grab" : "cursor-pointer")
 
