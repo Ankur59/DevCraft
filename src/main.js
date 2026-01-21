@@ -1,5 +1,6 @@
 import { editorState } from "./core/state.js";
 import { createElement, selectElement, updateElement } from "./core/stateActions.js";
+import { addCornerHandles } from "./utils/cornerHandles.js";
 
 const canvas = document.querySelector("#canvas")
 
@@ -33,7 +34,9 @@ export const renderCanvas = () => {
         div.style.zIndex = element.zIndex;
         div.style.borderRadius = "10px";
 
-
+        if (isSelected) {
+            addCornerHandles(div)
+        }
 
         div.classList.add(isSelected ? "cursor-grab" : "cursor-pointer")
 
@@ -41,7 +44,7 @@ export const renderCanvas = () => {
 
         div.addEventListener("mousedown", (e) => {
             if (editorState.selectedElementId !== div.dataset.id) return;
-            
+            div.classList.add("cursor-grabbing")
             const elementRect = div.getBoundingClientRect();
             const canvasRect = canvas.getBoundingClientRect();
 
@@ -61,7 +64,7 @@ export const renderCanvas = () => {
                 div.style.left = `${nextX}px`;
                 div.style.top = `${nextY}px`;
             };
-            
+
             document.addEventListener("mousemove", onMove);
 
             document.addEventListener(
@@ -86,8 +89,6 @@ export const renderCanvas = () => {
                 { once: true }
             );
         });
-
-
 
         if (element.type === "rectangle") {
             div.style.border = isSelected
