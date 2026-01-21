@@ -13,8 +13,8 @@ export const createElement = (type) => {
     const element = {
         id: generateId(),
         type,
-        x: Math.random() * maxX,
-        y: Math.random() * maxY,
+        x: 100,//Math.random() * maxX
+        y: 100,//Math.random() * maxY
         width: 120,
         height: 80,
         rotation: 0,
@@ -48,7 +48,7 @@ export const removeElement = (id) => {
 export const updateElement = (id, updates) => {
     const element = editorState.elements.find(el => el.id === id);
     if (!element) return;
-
+console.log(updates)
     Object.assign(element, updates);
     renderCanvas()
 };

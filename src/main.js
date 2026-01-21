@@ -1,5 +1,6 @@
 import { editorState } from "./core/state.js";
 import { createElement, selectElement, updateElement } from "./core/stateActions.js";
+import { handleRotate } from "./utils/centerHandler.js";
 import { addCornerHandles } from "./utils/cornerHandles.js";
 
 const canvas = document.querySelector("#canvas")
@@ -14,6 +15,8 @@ canvas.addEventListener("click", (e) => {
         renderCanvas();
     }
 });
+
+
 
 // This function has a particular job just to read the central state and render things in DOM
 export const renderCanvas = () => {
@@ -35,8 +38,35 @@ export const renderCanvas = () => {
         div.style.borderRadius = "10px";
 
         if (isSelected) {
-            addCornerHandles(div)
+            addCornerHandles(div);
+            handleRotate(div);
+
+            const topright = div.querySelector("#top-right");
+
+            topright.addEventListener("mousedown", (e) => {
+                e.stopPropagation();
+
+                const onMove = (e) => {
+                    const canvasRect = canvas.getBoundingClientRect();
+                    const mousePositionX = e.clientX - canvasRect.left;
+                    const mousePositionY = e.clientY - canvasRect.top
+                    const width = mousePositionX - parseFloat(div.style.left);
+                    const height = mousePositionY - parseFloat(div.style.top)
+                    updateElement(div.dataset.id, { width,height });
+                };
+
+                document.addEventListener("mousemove", onMove);
+
+                document.addEventListener(
+                    "mouseup",
+                    () => {
+                        document.removeEventListener("mousemove", onMove);
+                    },
+                    { once: true }
+                );
+            });
         }
+
 
         div.classList.add(isSelected ? "cursor-grab" : "cursor-pointer")
 
