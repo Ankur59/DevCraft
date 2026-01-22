@@ -1,6 +1,6 @@
 import { editorState } from "./core/state.js";
 import { createElement, selectElement, updateElement } from "./core/stateActions.js";
-import { startResizeTopRight } from "./ListenerFunctions/Resize.js";
+import { startResizeBottomLeft, startResizeBottomRight, startResizeTopLeft, startResizeTopRight } from "./ListenerFunctions/Resize.js";
 import { handleRotate } from "./utils/centerHandler.js";
 import { addCornerHandles } from "./utils/cornerHandles.js";
 
@@ -50,11 +50,14 @@ canvas.addEventListener("mousedown", (e) => {
             break;
         case "top-left":
             // resize
+            startResizeTopLeft(e, element, elementDiv, canvas);
             break;
         case "bottom-left":
+            startResizeBottomLeft(e, element, elementDiv, canvas);
             // resize
             break;
         case "bottom-right":
+            startResizeBottomRight(e, element, elementDiv, canvas)
             // resize
             break;
     }
