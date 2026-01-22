@@ -1,5 +1,5 @@
 import { editorState } from "./core/state.js";
-import { createElement, selectElement, updateElement } from "./core/stateActions.js";
+import { createElement, getSelectedElement, selectElement, updateElement } from "./core/stateActions.js";
 import { startResizeBottomLeft, startResizeBottomRight, startResizeTopLeft, startResizeTopRight } from "./ListenerFunctions/Resize.js";
 import { handleRotate } from "./utils/centerHandler.js";
 import { addCornerHandles } from "./utils/cornerHandles.js";
@@ -8,13 +8,18 @@ const canvas = document.querySelector("#canvas")
 
 const addRectangle = document.querySelector("#addRectangle")
 
+const textBox = document.querySelector("#textBox")
+
 let activeInteraction = null
 
+const colorContainer = document.querySelector("#colorContainer")
 const addCircle = document.querySelector("#addCircle")
 
 export function setActiveInteraction(value) {
     activeInteraction = value;
 }
+
+textBox.addEventListener("click", (e) => { createElement("textArea") })
 
 canvas.addEventListener("mousedown", (e) => {
     if (activeInteraction) return;
@@ -73,19 +78,71 @@ export const renderCanvas = () => {
 
         div.dataset.id = element.id;
 
-        div.style.position = "absolute";
-        div.style.left = `${element.x}px`;
-        div.style.top = `${element.y}px`;
-        div.style.width = `${element.width}px`;
-        div.style.height = `${element.height}px`;
-        div.style.backgroundColor =
+        if (element.type !== "textArea") {
+            div.style.backgroundColor = element.backgroundColor || ""
+            div.style.position = "absolute";
+            div.style.left = `${element.x}px`;
+            div.style.top = `${element.y}px`;
+            div.style.width = `${element.width}px`;
+            div.style.height = `${element.height}px`;
             div.style.transform = `rotate(${element.rotation}deg)`;
-        div.style.zIndex = element.zIndex;
-        div.style.borderRadius = element.borderRadius || "10px";
-        div.style.alignItems = "center"
-        div.style.display = "flex"
-        div.style.justifyContent = "center"
+            div.style.zIndex = element.zIndex;
+            div.style.borderRadius = element.borderRadius || "10px";
+            div.style.display = "flex";
+            div.style.alignItems = "center";
+            div.style.justifyContent = "center";
+        }
+        if (element.type === "textArea") {
+            // wrapper
+            div.style.position = "absolute";
+            div.style.left = `${element.x}px`;
+            div.style.top = `${element.y}px`;
+            div.style.width = `${element.width}px`;
+            div.style.height = `${element.height}px`;
+            div.style.zIndex = element.zIndex;
+            div.style.display = "flex";
+            div.style.alignItems = "center";
+            div.style.justifyContent = "center";
 
+            // textarea
+            const textarea = document.createElement("textarea");
+
+            // default text
+            textarea.value = element.content;
+
+            // textarea.addEventListener("mousedown", (e) => {
+            //     e.stopPropagation();
+            // });
+
+            textarea.addEventListener("click", (e) => {
+                e.stopPropagation();
+            });
+
+            // textarea styles (destructured idea, logically)
+            Object.assign(textarea.style, {
+                width: "100%",
+                height: "100%",
+                resize: "none",
+                border: "none",
+                outline: "none",
+                padding: "6px",
+                background: "transparent",
+
+                overflow: "auto",          // still scrollable
+                scrollbarWidth: "none",    // Firefox
+                msOverflowStyle: "none"    // IE / old Edge
+            });
+
+            textarea.addEventListener("input", (e) => {
+                updateElement(div.dataset.id, { content: e.target.value }, { render: false });
+            });
+
+
+            div.appendChild(textarea);
+            // console.log("this is div", div)
+            addCornerHandles(div);
+            // handleRotate(div);
+        }
         if (isSelected) {
             addCornerHandles(div);
             handleRotate(div);
@@ -139,6 +196,8 @@ export const renderCanvas = () => {
                     { once: true }
                 );
             });
+
+            // div.addEventListener("dblclick", (e) => { appendInput(div) })
         }
 
         div.classList.add(isSelected ? "cursor-pointer" : "cursor-pointer")
@@ -159,87 +218,20 @@ export const renderCanvas = () => {
 
 
 addRectangle.addEventListener("click", () => {
-    // Add new reactangle element to the central state
-    const element = createElement("rectangle");
-
-    // Render the canvas with new states
+    createElement("rectangle");
     renderCanvas()
 });
-
-
 
 addCircle.addEventListener("click", () => {
     createElement("circle")
     renderCanvas()
 })
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-// const renderElement = (element) => {
-//     const div = document.createElement("div");
-
-//     // Event listener on mouse enter
-//     div.addEventListener("mouseenter", () => {
-
-//     })
-
-
-
-//     const canvas = document.querySelector("#canvas");
-
-//     const maxX = canvas.clientWidth - element.width;
-//     const maxY = canvas.clientHeight - element.height;
-
-//     const randomX = Math.random() * maxX;
-//     const randomY = Math.random() * maxY;
-
-//     div.dataset.id = element.id;
-
-//     div.style.position = "absolute";
-//     div.style.left = `${randomX}px`;
-//     div.style.top = `${randomY}px`;
-//     div.style.width = `${element.width}px`;
-//     div.style.height = `${element.height}px`;
-//     div.style.transform = `rotate(${element.rotation}deg)`;
-//     div.style.zIndex = element.zIndex;
-//     div.style.borderRadius = "10px";
-//     div.classList.add("cursor-nwse-resize");
-
-//     if (element.type === "rectangle") {
-//         div.style.border = "2px dashed #3b82f6";
-//     }
-
-//     return div;
-// };
-
-// const renderElement = (element) => {
-//     const div = document.createElement("div");
-
-//     div.dataset.id = element.id;
-
-//     div.style.position = "absolute";
-//     div.style.left = `${element.x}px`;
-//     div.style.top = `${element.y}px`;
-//     div.style.width = `${element.width}px`;
-//     div.style.height = `${element.height}px`;
-//     div.style.transform = `rotate(${element.rotation}deg)`;
-//     div.style.zIndex = element.zIndex;
-//     div.style.borderRadius = "10px"
-//     div.classList.add("cursor-nwse-resize");
-//     if (element.type === "rectangle") {
-//         div.style.border = "2px dashed #3b82f6"
-//     }
-
-//     return div;
-// };
+colorContainer.addEventListener("click", (e) => {
+    if (e.srcElement.dataset.color) {
+        const element = getSelectedElement()
+        if (element) {
+            updateElement(element.id,{backgroundColor:e.srcElement.dataset.color})
+        }
+    }
+})

@@ -12,16 +12,35 @@ export const createElement = (type) => {
 
     const element = {
         id: generateId(),
-        type,
-        x: 100,//Math.random() * maxX
-        y: 100,//Math.random() * maxY
+        type, // "rect" | "circle" | "text" | "textArea"
+        x: 100,
+        y: 100,
         width: type === "circle" ? 80 : 120,
-        height: 80,
+        height: type === "textArea" ? 120 : 80,
         rotation: 0,
+        backgroundColor: "red",
         zIndex: editorState.elements.length + 1,
-        content: type === "text" ? "Text" : null,
+        content:
+            type === "text" ? "Text" :
+                type === "textArea" ? "...." :
+                    null,
         borderRadius: type === "circle" ? "100%" : "10px",
-        styles: {}
+        styles: {
+            wrapper: {
+                display: "flex",
+                justifyContent: "center",
+                border: "1px solid black",
+                alignItems: "center"
+            },
+            textarea: {
+                width: "100%",
+                height: "100%",
+                resize: "none",
+                border: "1px solid black",
+                outline: "none",
+                margin: "10px"
+            }
+        }
     };
 
     editorState.elements.push(element);
@@ -46,12 +65,15 @@ export const removeElement = (id) => {
 };
 
 // Function to update some property of of the object
-export const updateElement = (id, updates) => {
+export const updateElement = (id, updates, options = {}) => {
     const element = editorState.elements.find(el => el.id === id);
     if (!element) return;
-    console.log(updates)
+
     Object.assign(element, updates);
-    renderCanvas()
+
+    if (options.render !== false) {
+        renderCanvas();
+    }
 };
 
 export const getSelectedElement = () => {
@@ -62,3 +84,6 @@ export const getSelectedElement = () => {
 
 
 
+const createTextDiv = () => {
+    const div = document.createElement()
+}
