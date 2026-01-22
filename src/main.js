@@ -1,5 +1,5 @@
 import { editorState } from "./core/state.js";
-import { createElement, getSelectedElement, selectElement, updateElement } from "./core/stateActions.js";
+import { createElement, getSelectedElement, removeElement, selectElement, updateElement } from "./core/stateActions.js";
 import { startResizeBottomLeft, startResizeBottomRight, startResizeTopLeft, startResizeTopRight } from "./ListenerFunctions/Resize.js";
 import { handleRotate } from "./utils/centerHandler.js";
 import { addCornerHandles } from "./utils/cornerHandles.js";
@@ -19,6 +19,55 @@ const setHeight = document.querySelector("#setHeight")
 const setWidth = document.querySelector("#setWidth")
 
 const input = document.querySelector("#textContent")
+
+
+document.addEventListener("keydown", (e) => {
+
+    if (
+        document.activeElement.tagName === "INPUT" ||
+        document.activeElement.tagName === "TEXTAREA"
+    ) {
+        return;
+    }
+
+    const selected = getSelectedElement();
+    if (!selected) return;
+
+    const step = e.shiftKey ? 10 : 5;
+
+    const maxX = canvas.clientWidth - selected.width;
+    const maxY = canvas.clientHeight - selected.height;
+
+    switch (e.key) {
+        case "Delete":
+            removeElement(selected.id);
+            break;
+
+        case "ArrowUp":
+            updateElement(selected.id, {
+                y: Math.max(0, selected.y - step),
+            });
+            break;
+
+        case "ArrowDown":
+            updateElement(selected.id, {
+                y: Math.min(maxY, selected.y + step),
+            });
+            break;
+
+        case "ArrowLeft":
+            updateElement(selected.id, {
+                x: Math.max(0, selected.x - step),
+            });
+            break;
+
+        case "ArrowRight":
+            updateElement(selected.id, {
+                x: Math.min(maxX, selected.x + step),
+            });
+            break;
+    }
+});
 
 input.addEventListener("input", (e) => {
     const selected = getSelectedElement()
@@ -258,7 +307,7 @@ export const renderCanvas = () => {
         // if (element.type === "rectangle") {
         div.style.border = isSelected
             ? "2px dashed #ef4444"
-            : "2px solid #3b82f6";
+            : "0px solid #3b82f6";
         // }
 
         canvas.appendChild(div);

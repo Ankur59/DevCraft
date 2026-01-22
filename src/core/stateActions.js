@@ -5,10 +5,6 @@ export const generateId = () => crypto.randomUUID()
 
 // This function adds a item in the central element array
 export const createElement = (type) => {
-    const canvas = document.querySelector("#canvas");
-
-    const maxX = canvas.clientWidth - 120;
-    const maxY = canvas.clientHeight - 80;
 
     const element = {
         id: generateId(),
@@ -85,6 +81,7 @@ export const removeElement = (id) => {
     if (editorState.selectedElementId === id) {
         editorState.selectedElementId = null;
     }
+    renderCanvas()
 };
 
 // Function to update some property of of the object
