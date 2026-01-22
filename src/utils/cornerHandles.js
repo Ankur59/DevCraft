@@ -33,7 +33,7 @@ export const addCornerHandles = (parent) => {
 
     positions.forEach(p => {
         const handle = document.createElement("div");
-        handle.id = p.id
+        handle.dataset.handle = p.id
         handle.className = `
             absolute w-3 h-3 bg-white
             border border-black 
