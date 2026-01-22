@@ -1,8 +1,9 @@
 import { updateElement } from "../core/stateActions.js";
 import { setActiveInteraction } from "../main.js";
 
+const widthInput = document.querySelector("#setWidth")
+const heightInput = document.querySelector("#setHeight")
 export function startResizeTopRight(e, element, div, canvas) {
-    console.log("triggered 1")
     const canvasRect = canvas.getBoundingClientRect();
     const startX = element.x;
     const startY = element.y;
@@ -35,11 +36,17 @@ export function startResizeTopRight(e, element, div, canvas) {
                 div.style.width = `${size}px`;
                 div.style.height = `${size}px`;
                 div.style.top = `${mouseY}px`;
+                console.log(size)
+                widthInput.value = size
+                heightInput.value = size
+
             }
         } else if (newWidth > 20 && newHeight > 20) {
             div.style.width = `${newWidth}px`;
             div.style.height = `${newHeight}px`;
             div.style.top = `${mouseY}px`;
+            widthInput.value = newWidth
+            heightInput.value = newHeight
         }
     };
 
@@ -86,12 +93,17 @@ export function startResizeTopLeft(e, element, div, canvas) {
                 div.style.height = `${size}px`;
                 div.style.left = `${fixedRightX - size}px`;
                 div.style.top = `${fixedBottomY - size}px`;
+                widthInput.value = size
+                heightInput.value = size
+
             }
         } else if (newWidth > 20 && newHeight > 20) {
             div.style.left = `${mouseX}px`;
             div.style.top = `${mouseY}px`;
             div.style.width = `${newWidth}px`;
             div.style.height = `${newHeight}px`;
+            widthInput.value = newWidth
+            heightInput.value = newHeight
         }
     };
 
@@ -133,10 +145,14 @@ export function startResizeBottomRight(e, element, div, canvas) {
             if (size > 20) {
                 div.style.width = `${size}px`;
                 div.style.height = `${size}px`;
+                widthInput.value = size
+                heightInput.value = size
             }
         } else if (newWidth > 20 && newHeight > 20) {
             div.style.width = `${newWidth}px`;
             div.style.height = `${newHeight}px`;
+            widthInput.value = newWidth
+            heightInput.value = newHeight
         }
     };
 
@@ -233,11 +249,16 @@ export function startResizeBottomLeft(e, element, div, canvas) {
                 div.style.width = `${size}px`;
                 div.style.height = `${size}px`;
                 div.style.left = `${fixedRightX - size}px`;
+                widthInput.value = size
+                heightInput.value = size
+
             }
         } else if (newWidth > 20 && newHeight > 20) {
             div.style.left = `${mouseX}px`;
             div.style.width = `${newWidth}px`;
             div.style.height = `${newHeight}px`;
+            widthInput.value = newWidth
+            heightInput.value = newHeight
         }
     };
 

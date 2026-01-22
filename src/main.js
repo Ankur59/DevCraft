@@ -10,14 +10,48 @@ const addRectangle = document.querySelector("#addRectangle")
 
 const textBox = document.querySelector("#textBox")
 
-let activeInteraction = null
-
 const colorContainer = document.querySelector("#colorContainer")
+
 const addCircle = document.querySelector("#addCircle")
 
+const setHeight = document.querySelector("#setHeight")
+
+const setWidth = document.querySelector("#setWidth")
+
+setWidth.addEventListener("input", (e) => {
+    const maxWidth = canvas.getBoundingClientRect()
+    console.log(maxWidth.width)
+    const selected = getSelectedElement()
+    if (e.target.value > 20 && e.target.value < maxWidth.width) {
+        setWidth.style.color = "black"
+        selected.width = e.target.value
+        renderCanvas()
+    }
+    else if (e.target.value < 20 || e.target.value > maxWidth.width) {
+        console.log("Width Not Allowed")
+        setWidth.style.color = "red"
+    }
+});
+
+setHeight.addEventListener("input", (e) => {
+    const maxHeight = canvas.getBoundingClientRect()
+
+    const selected = getSelectedElement()
+    if (e.target.value > 20 && e.target.value < maxHeight.height) {
+        setHeight.style.color = "black"
+        selected.height = e.target.value
+        renderCanvas()
+    }
+    else if (e.target.value < 20 || e.target.value > maxHeight.height) {
+        console.log("Width Not Allowed")
+        setHeight.style.color = "red"
+    }
+});
 export function setActiveInteraction(value) {
     activeInteraction = value;
 }
+
+let activeInteraction = null
 
 textBox.addEventListener("click", (e) => { createElement("textArea") })
 
@@ -231,7 +265,7 @@ colorContainer.addEventListener("click", (e) => {
     if (e.srcElement.dataset.color) {
         const element = getSelectedElement()
         if (element) {
-            updateElement(element.id,{backgroundColor:e.srcElement.dataset.color})
+            updateElement(element.id, { backgroundColor: e.srcElement.dataset.color })
         }
     }
 })

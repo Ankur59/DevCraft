@@ -45,13 +45,31 @@ export const createElement = (type) => {
 
     editorState.elements.push(element);
     editorState.selectedElementId = element.id;
-
+    const widthInput = document.querySelector("#setWidth")
+    const heightInput = document.querySelector("#setHeight")
+    widthInput.value = element.height
+    heightInput.value = element.width
+    widthInput.style.color = "black"
+    widthInput.style.color = "black"
     return element;
 };
 
 // This function is to toggle selected elements
 export const selectElement = (id) => {
     editorState.selectedElementId = id;
+    const widthInput = document.querySelector("#setWidth")
+    const heightInput = document.querySelector("#setHeight")
+    const target = getSelectedElement()
+    if (target) {
+        widthInput.style.color = "black"
+        heightInput.style.color = "black"
+        widthInput.value = target.width
+        heightInput.value = target.height
+    }
+    else if (target === null) {
+        widthInput.value = 0
+        heightInput.value = 0
+    }
     renderCanvas()
 };
 
@@ -81,9 +99,3 @@ export const getSelectedElement = () => {
         el => el.id === editorState.selectedElementId
     ) || null;
 };
-
-
-
-const createTextDiv = () => {
-    const div = document.createElement()
-}
