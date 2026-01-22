@@ -15,11 +15,12 @@ export const createElement = (type) => {
         type,
         x: 100,//Math.random() * maxX
         y: 100,//Math.random() * maxY
-        width: 120,
+        width: type === "circle" ? 80 : 120,
         height: 80,
         rotation: 0,
         zIndex: editorState.elements.length + 1,
         content: type === "text" ? "Text" : null,
+        borderRadius: type === "circle" ? "100%" : "10px",
         styles: {}
     };
 
@@ -48,7 +49,7 @@ export const removeElement = (id) => {
 export const updateElement = (id, updates) => {
     const element = editorState.elements.find(el => el.id === id);
     if (!element) return;
-console.log(updates)
+    console.log(updates)
     Object.assign(element, updates);
     renderCanvas()
 };

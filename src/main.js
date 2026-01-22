@@ -7,6 +7,7 @@ const canvas = document.querySelector("#canvas")
 
 const addRectangle = document.querySelector("#addRectangle")
 
+const addCircle = document.querySelector("#addCircle")
 canvas.addEventListener("click", (e) => {
     const elementNode = e.target.closest("[data-id]");
 
@@ -15,7 +16,6 @@ canvas.addEventListener("click", (e) => {
         renderCanvas();
     }
 });
-
 
 
 // This function has a particular job just to read the central state and render things in DOM
@@ -36,7 +36,7 @@ export const renderCanvas = () => {
         div.style.backgroundColor = "red"
         div.style.transform = `rotate(${element.rotation}deg)`;
         div.style.zIndex = element.zIndex;
-        div.style.borderRadius = "10px";
+        div.style.borderRadius = element.borderRadius || "10px";
 
         if (isSelected) {
             addCornerHandles(div);
@@ -62,15 +62,31 @@ export const renderCanvas = () => {
                 const startHeight = element.height;
 
                 const fixedBottomY = startY + startHeight;
-
+                let newHeight = 0
+                let newWidth = 0
+                let mouseY = 0
+                let mouseX = 0
                 const onMove = (ev) => {
+                    const shift = ev.shiftKey
                     const mouseX = ev.clientX - canvasRect.left;
-                    const mouseY = ev.clientY - canvasRect.top;
+                    mouseY = ev.clientY - canvasRect.top;
+                    
+                    const largest = mouseX - startX > fixedBottomY - mouseY ? mouseX - startX : fixedBottomY - mouseY
+                    newWidth = shift ? largest : mouseX - startX;
+                    newHeight = shift ? largest : fixedBottomY - mouseY;
 
-                    const newWidth = mouseX - startX;
-                    const newHeight = fixedBottomY - mouseY;
+                    console.log(ev)
+                    if (shift && element.type === "circle") {
+                        const largest = newWidth > newHeight ? newWidth : newHeight
 
-                    if (newWidth > 20 && newHeight > 20) {
+                        if (largest > 20) {
+                       
+                            div.style.width = `${largest}px`;
+                            div.style.height = `${largest}px`;
+                            div.style.top = `${mouseY}px`;
+                        }
+                    }
+                    else if (newWidth > 20 && newHeight > 20) {
                         div.style.width = `${newWidth}px`;
                         div.style.height = `${newHeight}px`;
                         div.style.top = `${mouseY}px`;
@@ -84,10 +100,7 @@ export const renderCanvas = () => {
                     (ev) => {
                         document.removeEventListener("mousemove", onMove);
 
-                        const mouseX = ev.clientX - canvasRect.left;
-                        const mouseY = ev.clientY - canvasRect.top;
-                        const newWidth = mouseX - startX
-                        const newHeight = fixedBottomY - mouseY
+
                         if (newWidth > 20 && newHeight > 20) {
                             updateElement(element.id, {
                                 width: newWidth,
@@ -262,7 +275,7 @@ export const renderCanvas = () => {
                 );
             });
 
-            
+
 
         }
 
@@ -336,6 +349,25 @@ addRectangle.addEventListener("click", () => {
     // Render the canvas with new states
     renderCanvas()
 });
+
+
+
+addCircle.addEventListener("click", () => {
+    createElement("circle")
+    renderCanvas()
+})
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 // const renderElement = (element) => {
