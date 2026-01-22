@@ -18,6 +18,19 @@ const setHeight = document.querySelector("#setHeight")
 
 const setWidth = document.querySelector("#setWidth")
 
+const input = document.querySelector("#textContent")
+
+input.addEventListener("input", (e) => {
+    const selected = getSelectedElement()
+    if (selected.type === "textArea") {
+        input.style.color = "black"
+        updateElement(selected.id, { content: e.target.value })
+    }
+    else {
+        input.style.color = "red"
+    }
+})
+
 setWidth.addEventListener("input", (e) => {
     const maxWidth = canvas.getBoundingClientRect()
     console.log(maxWidth.width)
@@ -47,6 +60,7 @@ setHeight.addEventListener("input", (e) => {
         setHeight.style.color = "red"
     }
 });
+
 export function setActiveInteraction(value) {
     activeInteraction = value;
 }
@@ -56,6 +70,7 @@ let activeInteraction = null
 textBox.addEventListener("click", (e) => { createElement("textArea") })
 
 canvas.addEventListener("mousedown", (e) => {
+    console.log(activeInteraction)
     if (activeInteraction) return;
 
     const elementNode = e.target.closest("[data-id]");

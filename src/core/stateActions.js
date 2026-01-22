@@ -70,6 +70,11 @@ export const selectElement = (id) => {
         widthInput.value = 0
         heightInput.value = 0
     }
+
+    if (target.type === "textArea") {
+        const input = document.querySelector("#textContent")
+        input.value = target.content
+    }
     renderCanvas()
 };
 
