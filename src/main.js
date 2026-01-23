@@ -80,9 +80,70 @@ input.addEventListener("input", (e) => {
     }
 })
 
+const layerContainer = document.querySelector("#layerContainer")
+console.log("this is container for layers", layerContainer
+)
+
+// layerContainer.addEventListener("click", () => { createLayerCard("random", 1) })
+
+
+export function createLayerCard(layerName, layerId) {
+    const layerContainer = document.querySelector("#layerContainer");
+
+    // Card
+    const card = document.createElement("div");
+    card.className =
+        "bg-white rounded-lg shadow p-3 flex items-center justify-between mb-3";
+    card.dataset.id = layerId;
+    if (layerId === editorState.selectedElementId) {
+        card.style.border = "1px dashed black"
+    }
+
+    // Layer name
+    const name = document.createElement("span");
+    name.className = "text-sm font-medium text-gray-700";
+    name.textContent = layerName;
+
+    // Actions container
+    const actions = document.createElement("div");
+    actions.className = "flex gap-2";
+
+    // Up button
+    const upBtn = document.createElement("button");
+    upBtn.className =
+        "w-7 h-7 flex items-center justify-center rounded-md bg-gray-100 hover:bg-gray-200 text-gray-700 text-xs";
+    upBtn.textContent = "▲";
+
+    // Down button
+    const downBtn = document.createElement("button");
+    downBtn.className =
+        "w-7 h-7 flex items-center justify-center rounded-md bg-gray-100 hover:bg-gray-200 text-gray-700 text-xs";
+    downBtn.textContent = "▼";
+
+    // Delete button
+    const deleteBtn = document.createElement("button");
+    deleteBtn.className =
+        "w-7 h-7 flex items-center justify-center rounded-md bg-red-100 hover:bg-red-200 text-red-600 text-xs";
+    deleteBtn.textContent = "✕";
+
+    // Assemble
+    actions.appendChild(upBtn);
+    actions.appendChild(downBtn);
+    actions.appendChild(deleteBtn);
+
+    card.appendChild(name);
+    card.appendChild(actions);
+
+    layerContainer.prepend(card);
+
+    // Return references for listeners
+    return { card, upBtn, downBtn, deleteBtn };
+}
+
+
 setWidth.addEventListener("input", (e) => {
     const maxWidth = canvas.getBoundingClientRect()
-    console.log(maxWidth.width)
+    // console.log(maxWidth.width)
     const selected = getSelectedElement()
     if (e.target.value > 20 && e.target.value < maxWidth.width) {
         setWidth.style.color = "black"
@@ -90,7 +151,7 @@ setWidth.addEventListener("input", (e) => {
         renderCanvas()
     }
     else if (e.target.value < 20 || e.target.value > maxWidth.width) {
-        console.log("Width Not Allowed")
+        // console.log("Width Not Allowed")
         setWidth.style.color = "red"
     }
 });
@@ -105,7 +166,7 @@ setHeight.addEventListener("input", (e) => {
         renderCanvas()
     }
     else if (e.target.value < 20 || e.target.value > maxHeight.height) {
-        console.log("Width Not Allowed")
+        // console.log("Width Not Allowed")
         setHeight.style.color = "red"
     }
 });
@@ -119,7 +180,7 @@ let activeInteraction = null
 textBox.addEventListener("click", (e) => { createElement("textArea") })
 
 canvas.addEventListener("mousedown", (e) => {
-    console.log(activeInteraction)
+    // console.log("runnign")
     if (activeInteraction) return;
 
     const elementNode = e.target.closest("[data-id]");
@@ -333,3 +394,5 @@ colorContainer.addEventListener("click", (e) => {
         }
     }
 })
+
+
