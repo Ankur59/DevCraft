@@ -89,13 +89,12 @@ export const selectElement = (id) => {
 
 // This function is to delete a state
 export const removeElement = (id) => {
-    console.log("DELETE FUNCTION RUNNING")
+    
     editorState.elements = editorState.elements.filter(el => el.id !== id);
     if (editorState.selectedElementId === id) {
         editorState.selectedElementId = null;
         selectElement(null)
     }
-    console.log('delete function if done')
     deleteLayer(id)
     renderCanvas()
 };
@@ -143,7 +142,7 @@ const changeLayerFocus = (id, previous) => {
     }
 };
 
-const deleteLayer = (id) => {
+export const deleteLayer = (id) => {
     const layerContainer = document.querySelector("#layerContainer")
     const child = layerContainer.querySelector(`[data-id="${id}"]`)
     console.log(child)

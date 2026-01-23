@@ -1,5 +1,5 @@
 import { editorState } from "./core/state.js";
-import { changeLayerDown, changeLayerUP, createElement, getSelectedElement, removeElement, selectElement, updateElement } from "./core/stateActions.js";
+import { changeLayerDown, changeLayerUP, createElement, deleteLayer, getSelectedElement, removeElement, selectElement, updateElement } from "./core/stateActions.js";
 import { startResizeBottomLeft, startResizeBottomRight, startResizeTopLeft, startResizeTopRight } from "./ListenerFunctions/Resize.js";
 import { handleRotate } from "./utils/centerHandler.js";
 import { addCornerHandles } from "./utils/cornerHandles.js";
@@ -85,26 +85,36 @@ console.log("this is container for layers", layerContainer
 
 layerContainer.addEventListener("click", (e) => {
     const actionBtn = e.target.closest("button");
-    if (!actionBtn) return;
-
-    const action = actionBtn.dataset.id; // "up" | "down"
-
-    const card = actionBtn.closest("[data-id]:not(button)");
+    const card = e.target.closest("[data-id]:not(button)");
     if (!card) return;
-
-    const index = Number(
-        card.querySelector("span").textContent.split(" ")[1]
-    );
 
     const layerId = card.dataset.id;
 
-    if (action === "up") {
-        changeLayerUP(layerId, action, index);
+    if (actionBtn) {
+        const action = actionBtn.dataset.id;
+
+        const index = Number(
+            card.querySelector("span").textContent.split(" ")[1]
+        );
+
+        if (action === "up") {
+            changeLayerUP(layerId, action, index);
+        }
+        else if (action === "down") {
+            changeLayerDown(layerId, action, index);
+        }
+        else if (action === "deleteLayer") {
+            removeElement(layerId);
+        }
+
+        return; 
     }
-    else if (action === "down") {
-        changeLayerDown(layerId, action, index);
-    }
+
+   
+    selectElement(layerId)
+
 });
+
 
 export function createLayerCard(layerName, layerId) {
     const layerContainer = document.querySelector("#layerContainer");
@@ -144,6 +154,7 @@ export function createLayerCard(layerName, layerId) {
 
     // Delete button
     const deleteBtn = document.createElement("button");
+    deleteBtn.dataset.id = "deleteLayer"
     deleteBtn.className =
         "w-7 h-7 flex items-center justify-center rounded-md bg-red-100 hover:bg-red-200 text-red-600 text-xs";
     deleteBtn.textContent = "✕";
@@ -246,7 +257,7 @@ canvas.addEventListener("mousedown", (e) => {
     }
 })
 
-// This function has a particular job just to read the central state and render things in DOM
+// This function has a particular job just to read the central state and render things in DOM for canvas
 export const renderCanvas = () => {
     canvas.innerHTML = "";
 
@@ -382,13 +393,9 @@ export const renderCanvas = () => {
 
         div.addEventListener("click", () => { selectElement(div.dataset.id) })
 
-
-
-        // if (element.type === "rectangle") {
         div.style.border = isSelected
             ? "2px dashed #ef4444"
-            : "0px solid #3b82f6";
-        // }
+            : "2px solid #3b82f6";
 
         canvas.appendChild(div);
     });
