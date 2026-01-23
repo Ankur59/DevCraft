@@ -89,8 +89,6 @@ export const selectElement = (id) => {
     saveState()
 };
 
-
-
 // This function is to delete a state
 export const removeElement = (id) => {
 

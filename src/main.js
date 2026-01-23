@@ -313,6 +313,7 @@ export const renderCanvas = () => {
             div.style.position = "absolute";
             div.style.left = `${element.x}px`;
             div.style.top = `${element.y}px`;
+            div.style.backgroundColor = element.backgroundColor ||""
             div.style.width = `${element.width}px`;
             div.style.height = `${element.height}px`;
             div.style.zIndex = element.zIndex;
@@ -442,6 +443,7 @@ addCircle.addEventListener("click", () => {
 colorContainer.addEventListener("click", (e) => {
     if (e.srcElement.dataset.color) {
         const element = getSelectedElement()
+        console.log(element)
         if (element) {
             updateElement(element.id, { backgroundColor: e.srcElement.dataset.color })
         }
