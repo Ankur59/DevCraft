@@ -1,5 +1,5 @@
 import { editorState } from "./core/state.js";
-import { changeLayer, createElement, getSelectedElement, removeElement, selectElement, updateElement } from "./core/stateActions.js";
+import { changeLayerDown, changeLayerUP, createElement, getSelectedElement, removeElement, selectElement, updateElement } from "./core/stateActions.js";
 import { startResizeBottomLeft, startResizeBottomRight, startResizeTopLeft, startResizeTopRight } from "./ListenerFunctions/Resize.js";
 import { handleRotate } from "./utils/centerHandler.js";
 import { addCornerHandles } from "./utils/cornerHandles.js";
@@ -87,20 +87,23 @@ layerContainer.addEventListener("click", (e) => {
     const actionBtn = e.target.closest("button");
     if (!actionBtn) return;
 
-    const action = actionBtn.dataset.id; // "up" or "down"
+    const action = actionBtn.dataset.id; // "up" | "down"
 
     const card = actionBtn.closest("[data-id]:not(button)");
     if (!card) return;
+
     const index = Number(
         card.querySelector("span").textContent.split(" ")[1]
     );
 
-    // console.log(span)
     const layerId = card.dataset.id;
 
-    console.log("action:", action);
-    console.log("layer id:", layerId);
-    changeLayer(layerId, action, index)
+    if (action === "up") {
+        changeLayerUP(layerId, action, index);
+    }
+    else if (action === "down") {
+        changeLayerDown(layerId, action, index);
+    }
 });
 
 export function createLayerCard(layerName, layerId) {

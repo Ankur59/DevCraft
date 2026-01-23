@@ -160,7 +160,7 @@ const deleteLayer = (id) => {
     })
 }
 
-export const changeLayer = (id, action, index) => {
+export const changeLayerUP = (id, action, index) => {
     if (action !== "up") return;
 
     // find sibling (element just above)
@@ -200,5 +200,58 @@ export const changeLayer = (id, action, index) => {
 
     if (currentCardEl && siblingCardEl) {
         layerContainer.insertBefore(currentCardEl,siblingCardEl );
+    }
+};
+
+
+export const changeLayerDown = (id, action, index) => {
+    if (action !== "down") return;
+
+    // find sibling (element just below)
+    const sibling = editorState.elements.find(
+        (item) => item.zIndex === index - 1
+    );
+    if (!sibling) return;
+
+    // update STATE (swap zIndex)
+    editorState.elements.forEach((element) => {
+        if (element.id === id) {
+            element.zIndex = index - 1;
+        }
+        else if (element.id === sibling.id) {
+            element.zIndex = index;
+        }
+    });
+
+    // update DOM (canvas)
+    const currentEl = canvas.querySelector(`[data-id="${id}"]`);
+    const siblingEl = canvas.querySelector(`[data-id="${sibling.id}"]`);
+
+    if (currentEl) currentEl.style.zIndex = index - 1;
+    if (siblingEl) siblingEl.style.zIndex = index;
+
+    const layerContainer = document.querySelector("#layerContainer");
+
+    // update layer panel text
+    const card = layerContainer
+        .querySelector(`[data-id="${id}"]`)
+        .querySelector("span");
+    const text = card.textContent.split(" ")[0];
+    card.textContent = `${text} ${index - 1}`;
+
+    const siblingCard = layerContainer
+        .querySelector(`[data-id="${sibling.id}"]`)
+        .querySelector("span");
+    const siblingText = siblingCard.textContent.split(" ")[0];
+    siblingCard.innerText = `${siblingText} ${index}`;
+
+    // reorder layer panel DOM (swap downward)
+    const currentCardEl = layerContainer.querySelector(`[data-id="${id}"]`);
+    const siblingCardEl = layerContainer.querySelector(
+        `[data-id="${sibling.id}"]`
+    );
+
+    if (currentCardEl && siblingCardEl) {
+        layerContainer.insertBefore(siblingCardEl, currentCardEl);
     }
 };
