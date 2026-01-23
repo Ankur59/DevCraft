@@ -10,13 +10,12 @@
 </head>
 
 <body>
-    <div class="flex">
+    <div class="flex h-screen w-screen overflow-hidden items-stretch">
 
-        <!-- Section for side bar -->
-        <div class="flex min-h-screen bg-gray-100">
-            <aside class="w-56 bg-[#f3f3f3] border-r border-gray-300 flex flex-col justify-between p-4">
+        <div class="flex h-full bg-gray-100 shrink-0">
+            <aside class="w-56 h-full bg-[#f3f3f3] border-r border-gray-300
+                 flex flex-col justify-between p-4 overflow-y-auto custom-scrollbar">
 
-                <!-- Paste things here for alingment -->
                 <div class="space-y-3">
                     <button id="addRectangle" class="w-full py-2 rounded-xl bg-white hover:bg-gray-200 shadow text-sm">
                         Rectangle
@@ -33,88 +32,73 @@
                     <button id="rotateRight" class="w-full py-2 rounded-xl bg-white hover:bg-gray-200 shadow text-sm">
                         Rotate Right
                     </button>
+
                     <div id="colorContainer"
                         class="w-full max-w-5xl mx-auto bg-white p-4 rounded-lg shadow flex flex-wrap gap-4">
-
-
                         <div id="red-chip" data-color="red" data-value="#ef4444"
-                            class="w-10 h-10 rounded-full bg-red-500 cursor-pointer">
-                        </div>
-
+                            class="w-10 h-10 rounded-full bg-red-500 cursor-pointer"></div>
                         <div id="blue-chip" data-color="blue" data-value="#3b82f6"
                             class="w-10 h-10 rounded-full bg-blue-500 cursor-pointer"></div>
-
                         <div id="green-chip" data-color="green" data-value="#22c55e"
                             class="w-10 h-10 rounded-full bg-green-500 cursor-pointer"></div>
-
                         <div id="yellow-chip" data-color="yellow" data-value="#eab308"
                             class="w-10 h-10 rounded-full bg-yellow-400 cursor-pointer"></div>
-
                         <div id="purple-chip" data-color="purple" data-value="#a855f7"
                             class="w-10 h-10 rounded-full bg-purple-500 cursor-pointer"></div>
-                        <div id="pink-chip" data-color="transparent_1px" data-value="transparent_1px" class="w-10 h-10 rounded-full border border-gray-400 cursor-pointer
-                        bg-[linear-gradient(45deg,#ccc_25%,transparent_25%,transparent_75%,#ccc_75%,#ccc)]
-                        bg-[length:8px_8px]">
+                        <div id="pink-chip" data-color="transparent_1px" data-value="transparent_1px"
+                            class="w-10 h-10 rounded-full border border-gray-400 cursor-pointer bg-[linear-gradient(45deg,#ccc_25%,transparent_25%,transparent_75%,#ccc_75%,#ccc)] bg-[length:8px_8px]">
                         </div>
                     </div>
-                    <div class="w-full max-w-5xl mx-auto  flex flex-col gap-4">
 
-                        <!-- Width Section -->
+                    <div class="w-full max-w-5xl mx-auto flex flex-col gap-4">
                         <div class="bg-white p-4 rounded-lg shadow">
-                            <h2 class="text-sm font-semibold text-gray-700 mb-2">
-                                Width (px)
-                            </h2>
+                            <h2 class="text-sm font-semibold text-gray-700 mb-2">Width (px)</h2>
                             <input id="setWidth" type="number" placeholder="0px"
                                 class="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" />
                         </div>
-
-                        <!-- Height Section -->
                         <div class="bg-white p-4 rounded-lg shadow">
-                            <h2 class="text-sm font-semibold text-gray-700 mb-2">
-                                Height (px)
-                            </h2>
+                            <h2 class="text-sm font-semibold text-gray-700 mb-2">Height (px)</h2>
                             <input type="number" id="setHeight" placeholder="0px"
                                 class="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" />
                         </div>
+                    </div>
 
+                    <div class="w-full max-w-5xl mx-auto py-2">
+                        <div class="bg-white p-4 rounded-lg shadow">
+                            <h2 class="text-sm font-semibold text-gray-700 mb-2">Text Content</h2>
+                            <input type="text" id="textContent" placeholder="Enter text content"
+                                class="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                        </div>
                     </div>
                 </div>
 
-
-                <div class="w-full max-w-5xl mx-auto">
-                    <div class="bg-white p-4 rounded-lg shadow">
-                        <h2 class="text-sm font-semibold text-gray-700 mb-2">
-                            Text Content
-                        </h2>
-                        <input type="text" id="textContent" placeholder="Enter text content" class="w-full border border-gray-300 rounded-md px-3 py-2 text-sm
-                             focus:outline-none focus:ring-2 focus:ring-blue-500" />
-                    </div>
-                </div>
-
-                <div class="space-y-3">
+                <div class="space-y-3 mt-6">
                     <button id="deleteAll"
                         class="w-full py-2 rounded-xl bg-red-50 text-red-600 hover:bg-red-100 shadow text-sm">
                         Delete All
                     </button>
-                    <button class="w-full py-2 rounded-xl bg-black text-white hover:bg-gray-800 shadow text-sm">
-                        Export
-                    </button>
+                    <div class="w-full flex gap-2">
+                        <button id="exportJSON"
+                            class="w-full py-2 px-2 rounded-xl bg-black text-white hover:bg-gray-800 shadow text-sm">
+                            Export JSON
+                        </button>
+                        <button id="exportHTML"
+                            class="w-full py-2 rounded-xl bg-black text-white hover:bg-gray-800 shadow text-sm">
+                            Export HTML
+                        </button>
+                    </div>
                 </div>
-
             </aside>
         </div>
-        <!-- Sidebar ends here -->
 
-        <!-- Canvas for drawing everything -->
-        <div id="canvas" tabindex="0" class="relative w-screen h-screen bg-[#f8f8f8] shadow-md overflow-hidden
+        <div id="canvas" tabindex="0" class="flex-grow relative bg-[#f8f8f8] shadow-md overflow-hidden
                      bg-[radial-gradient(#d1d1d1_1px,transparent_1px)]
                      bg-[length:24px_24px]">
         </div>
 
-
-        <div class="flex min-h-screen bg-gray-100">
-            <aside id="layerContainer" class="w-56 bg-[#f3f3f3] border-l border-gray-300 flex flex-col p-4">
-
+        <div class="flex h-full bg-gray-100 shrink-0">
+            <aside id="layerContainer"
+                class="w-56 h-full bg-[#f3f3f3] border-l border-gray-300 flex flex-col p-4 overflow-y-auto custom-scrollbar">
             </aside>
         </div>
     </div>
