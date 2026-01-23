@@ -1,5 +1,5 @@
 import { editorState } from "./core/state.js";
-import { changeLayerDown, changeLayerUP, createElement, deleteLayer, getSelectedElement, removeElement, selectElement, updateElement } from "./core/stateActions.js";
+import { changeLayerDown, changeLayerUP, createElement, deleteLayer, getSelectedElement, removeElement, rotateLeft, rotateRight, selectElement, updateElement } from "./core/stateActions.js";
 import { startResizeBottomLeft, startResizeBottomRight, startResizeTopLeft, startResizeTopRight } from "./ListenerFunctions/Resize.js";
 import { handleRotate } from "./utils/centerHandler.js";
 import { addCornerHandles } from "./utils/cornerHandles.js";
@@ -19,6 +19,10 @@ const setHeight = document.querySelector("#setHeight")
 const setWidth = document.querySelector("#setWidth")
 
 const input = document.querySelector("#textContent")
+
+const rotateL = document.querySelector("#rotateLeft")
+
+const rotateR = document.querySelector("#rotateRight")
 
 document.addEventListener("keydown", (e) => {
 
@@ -68,6 +72,14 @@ document.addEventListener("keydown", (e) => {
     }
 });
 
+rotateL.addEventListener("click", (e) => {
+    rotateLeft()
+})
+
+rotateR.addEventListener("click", (e) => {
+    rotateRight()
+})
+
 input.addEventListener("input", (e) => {
     const selected = getSelectedElement()
     if (selected.type === "textArea") {
@@ -80,8 +92,7 @@ input.addEventListener("input", (e) => {
 })
 
 const layerContainer = document.querySelector("#layerContainer")
-console.log("this is container for layers", layerContainer
-)
+
 
 layerContainer.addEventListener("click", (e) => {
     const actionBtn = e.target.closest("button");
@@ -107,10 +118,10 @@ layerContainer.addEventListener("click", (e) => {
             removeElement(layerId);
         }
 
-        return; 
+        return;
     }
 
-   
+
     selectElement(layerId)
 
 });

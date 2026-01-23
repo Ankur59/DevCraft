@@ -89,7 +89,7 @@ export const selectElement = (id) => {
 
 // This function is to delete a state
 export const removeElement = (id) => {
-    
+
     editorState.elements = editorState.elements.filter(el => el.id !== id);
     if (editorState.selectedElementId === id) {
         editorState.selectedElementId = null;
@@ -198,7 +198,7 @@ export const changeLayerUP = (id, action, index) => {
     const siblingCardEl = layerContainer.querySelector(`[data-id="${sibling.id}"]`);
 
     if (currentCardEl && siblingCardEl) {
-        layerContainer.insertBefore(currentCardEl,siblingCardEl );
+        layerContainer.insertBefore(currentCardEl, siblingCardEl);
     }
 };
 
@@ -253,4 +253,31 @@ export const changeLayerDown = (id, action, index) => {
     if (currentCardEl && siblingCardEl) {
         layerContainer.insertBefore(siblingCardEl, currentCardEl);
     }
+};
+
+
+export const rotateLeft = () => {
+    const selected = getSelectedElement()
+    const rotation = selected.rotation + 10
+    updateElement(selected.id, { rotation: rotation }, { render: false })
+
+    const item = canvas.querySelector(`[data-id="${selected.id}"]`);
+console.log
+    item.style.transform = `rotate(${rotation}deg)`;
+
+}
+
+
+export const rotateRight = () => {
+    const selected = getSelectedElement();
+    if (!selected) return;
+
+    const rotation = selected.rotation - 10;
+
+    updateElement(selected.id, { rotation }, { render: false });
+
+    const item = canvas.querySelector(`[data-id="${selected.id}"]`);
+    if (!item) return;
+
+    item.style.transform = `rotate(${rotation}deg)`;
 };
