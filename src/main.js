@@ -1,5 +1,5 @@
 import { editorState } from "./core/state.js";
-import { createElement, getSelectedElement, removeElement, selectElement, updateElement } from "./core/stateActions.js";
+import { changeLayer, createElement, getSelectedElement, removeElement, selectElement, updateElement } from "./core/stateActions.js";
 import { startResizeBottomLeft, startResizeBottomRight, startResizeTopLeft, startResizeTopRight } from "./ListenerFunctions/Resize.js";
 import { handleRotate } from "./utils/centerHandler.js";
 import { addCornerHandles } from "./utils/cornerHandles.js";
@@ -19,7 +19,6 @@ const setHeight = document.querySelector("#setHeight")
 const setWidth = document.querySelector("#setWidth")
 
 const input = document.querySelector("#textContent")
-
 
 document.addEventListener("keydown", (e) => {
 
@@ -84,8 +83,25 @@ const layerContainer = document.querySelector("#layerContainer")
 console.log("this is container for layers", layerContainer
 )
 
-// layerContainer.addEventListener("click", () => { createLayerCard("random", 1) })
+layerContainer.addEventListener("click", (e) => {
+    const actionBtn = e.target.closest("button");
+    if (!actionBtn) return;
 
+    const action = actionBtn.dataset.id; // "up" or "down"
+
+    const card = actionBtn.closest("[data-id]:not(button)");
+    if (!card) return;
+    const index = Number(
+        card.querySelector("span").textContent.split(" ")[1]
+    );
+
+    // console.log(span)
+    const layerId = card.dataset.id;
+
+    console.log("action:", action);
+    console.log("layer id:", layerId);
+    changeLayer(layerId, action, index)
+});
 
 export function createLayerCard(layerName, layerId) {
     const layerContainer = document.querySelector("#layerContainer");
@@ -94,6 +110,7 @@ export function createLayerCard(layerName, layerId) {
     const card = document.createElement("div");
     card.className =
         "bg-white rounded-lg shadow p-3 flex items-center justify-between mb-3";
+
     card.dataset.id = layerId;
     if (layerId === editorState.selectedElementId) {
         card.style.border = "1px dashed black"
@@ -113,12 +130,14 @@ export function createLayerCard(layerName, layerId) {
     upBtn.className =
         "w-7 h-7 flex items-center justify-center rounded-md bg-gray-100 hover:bg-gray-200 text-gray-700 text-xs";
     upBtn.textContent = "▲";
+    upBtn.dataset.id = "up"
 
     // Down button
     const downBtn = document.createElement("button");
     downBtn.className =
         "w-7 h-7 flex items-center justify-center rounded-md bg-gray-100 hover:bg-gray-200 text-gray-700 text-xs";
     downBtn.textContent = "▼";
+    downBtn.dataset.id = "down"
 
     // Delete button
     const deleteBtn = document.createElement("button");
@@ -139,7 +158,6 @@ export function createLayerCard(layerName, layerId) {
     // Return references for listeners
     return { card, upBtn, downBtn, deleteBtn };
 }
-
 
 setWidth.addEventListener("input", (e) => {
     const maxWidth = canvas.getBoundingClientRect()
@@ -189,8 +207,6 @@ canvas.addEventListener("mousedown", (e) => {
         renderCanvas();
     }
 });
-
-
 
 canvas.addEventListener("mousedown", (e) => {
     const handle = e.target.closest("[data-handle]");

@@ -1,6 +1,6 @@
 import { createLayerCard, renderCanvas } from "../main.js";
 import { editorState } from "./state.js";
-
+const canvas = document.querySelector("#canvas")
 export const generateId = () => crypto.randomUUID()
 
 // This function adds a item in the central element array
@@ -118,8 +118,6 @@ export const getSelectedElement = () => {
     ) || null;
 };
 
-
-
 const changeLayerFocus = (id, previous) => {
     const layerContainer = document.querySelector("#layerContainer");
 
@@ -145,7 +143,6 @@ const changeLayerFocus = (id, previous) => {
     }
 };
 
-
 const deleteLayer = (id) => {
     const layerContainer = document.querySelector("#layerContainer")
     const child = layerContainer.querySelector(`[data-id="${id}"]`)
@@ -162,3 +159,46 @@ const deleteLayer = (id) => {
         }
     })
 }
+
+export const changeLayer = (id, action, index) => {
+    if (action !== "up") return;
+
+    // find sibling (element just above)
+    const sibling = editorState.elements.find(
+        (item) => item.zIndex === index + 1
+    );
+    if (!sibling) return;
+
+    // update STATE (swap zIndex)
+    editorState.elements.forEach((element) => {
+        if (element.id === id) {
+            element.zIndex = index + 1;
+        }
+        else if (element.id === sibling.id) {
+            element.zIndex = index;
+        }
+    });
+
+    // update DOM
+    const currentEl = canvas.querySelector(`[data-id="${id}"]`);
+    const siblingEl = canvas.querySelector(`[data-id="${sibling.id}"]`);
+
+    if (currentEl) currentEl.style.zIndex = index + 1;
+    if (siblingEl) siblingEl.style.zIndex = index;
+    const layerContainer = document.querySelector("#layerContainer")
+    // Updating layer view
+    const card = layerContainer.querySelector(`[data-id="${id}"]`).querySelector('span')
+    const text = card.textContent.split(" ")[0]
+    card.textContent = `${text} ${index + 1}`
+
+    const siblingCard = layerContainer.querySelector(`[data-id="${sibling.id}"]`).querySelector('span')
+    const siblingText = siblingCard.textContent.split(" ")[0]
+    siblingCard.innerText = `${siblingText} ${index}`
+
+    const currentCardEl = layerContainer.querySelector(`[data-id="${id}"]`);
+    const siblingCardEl = layerContainer.querySelector(`[data-id="${sibling.id}"]`);
+
+    if (currentCardEl && siblingCardEl) {
+        layerContainer.insertBefore(currentCardEl,siblingCardEl );
+    }
+};
