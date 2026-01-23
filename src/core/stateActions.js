@@ -262,7 +262,7 @@ export const rotateLeft = () => {
     updateElement(selected.id, { rotation: rotation }, { render: false })
 
     const item = canvas.querySelector(`[data-id="${selected.id}"]`);
-console.log
+    console.log
     item.style.transform = `rotate(${rotation}deg)`;
 
 }
@@ -281,3 +281,11 @@ export const rotateRight = () => {
 
     item.style.transform = `rotate(${rotation}deg)`;
 };
+
+
+export const handleDeleteAll = () => {
+    editorState.elements = []
+    const layerContainer = document.querySelector("#layerContainer")
+    layerContainer.innerHTML=""
+    renderCanvas()
+}

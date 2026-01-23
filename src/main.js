@@ -1,5 +1,5 @@
 import { editorState } from "./core/state.js";
-import { changeLayerDown, changeLayerUP, createElement, deleteLayer, getSelectedElement, removeElement, rotateLeft, rotateRight, selectElement, updateElement } from "./core/stateActions.js";
+import { changeLayerDown, changeLayerUP, createElement, deleteLayer, getSelectedElement, handleDeleteAll, removeElement, rotateLeft, rotateRight, selectElement, updateElement } from "./core/stateActions.js";
 import { startResizeBottomLeft, startResizeBottomRight, startResizeTopLeft, startResizeTopRight } from "./ListenerFunctions/Resize.js";
 import { handleRotate } from "./utils/centerHandler.js";
 import { addCornerHandles } from "./utils/cornerHandles.js";
@@ -71,7 +71,18 @@ document.addEventListener("keydown", (e) => {
             break;
     }
 });
+const deleteAll = document.querySelector("#deleteAll")
 
+deleteAll.addEventListener("click", () => {
+    const ok = confirm("Are you sure you want to delete all elements? Note- It can't be recovered");
+
+    if (ok) {
+       handleDeleteAll()
+    } else {
+        // user clicked Cancel
+        console.log("User cancelled");
+    }
+})
 rotateL.addEventListener("click", (e) => {
     rotateLeft()
 })
