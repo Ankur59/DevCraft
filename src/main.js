@@ -1,5 +1,5 @@
 import { editorState } from "./core/state.js";
-import { autoFetchFromSavedState, changeLayerDown, changeLayerUP, createElement, deleteLayer, getSelectedElement, handleDeleteAll, removeElement, rotateLeft, rotateRight, selectElement, updateElement } from "./core/stateActions.js";
+import { autoFetchFromSavedState, changeBorder, changeLayerDown, changeLayerUP, createElement, deleteLayer, getSelectedElement, handleDeleteAll, removeElement, rotateLeft, rotateRight, selectElement, updateElement } from "./core/stateActions.js";
 import { startResizeBottomLeft, startResizeBottomRight, startResizeTopLeft, startResizeTopRight } from "./ListenerFunctions/Resize.js";
 import { handleRotate } from "./utils/centerHandler.js";
 import { addCornerHandles } from "./utils/cornerHandles.js";
@@ -77,11 +77,28 @@ document.addEventListener("DOMContentLoaded", () => {
     autoFetchFromSavedState()
 });
 
+const borderParent = document.getElementById("borderParent");
+
+borderParent.addEventListener("click", (e) => {
+    console.log("clicked")
+    const button = e.target.closest("button");
+    if (!button || !borderParent.contains(button)) return;
+
+    const color = button.title; // "Red", "Blue", "Transparent", etc.
+
+    // handle transparent separately if needed
+    if (color === "Transparent") {
+        changeBorder("transparent");
+    } else {
+        changeBorder(color.toLowerCase());
+    }
+});
+
 deleteAll.addEventListener("click", () => {
     const ok = confirm("Are you sure you want to delete all elements? Note- It can't be recovered");
 
     if (ok) {
-       handleDeleteAll()
+        handleDeleteAll()
     } else {
         // user clicked Cancel
         console.log("User cancelled");
@@ -424,7 +441,7 @@ export const renderCanvas = () => {
 
         div.style.border = isSelected
             ? "2px dashed #ef4444"
-            : "2px solid #3b82f6";
+            : element.border || "1px solid blue";
 
         canvas.appendChild(div);
     });

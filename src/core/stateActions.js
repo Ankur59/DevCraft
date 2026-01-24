@@ -15,6 +15,7 @@ export const createElement = (type) => {
         height: type === "textArea" ? 120 : 80,
         rotation: 0,
         backgroundColor: "red",
+        border: "1px solid blue",
         zIndex: editorState.elements.length + 1,
         content:
             type === "text" ? "Text" :
@@ -77,8 +78,14 @@ export const selectElement = (id) => {
             const input = document.querySelector("#textContent")
             input.value = target.content
         }
+        else if (target !== "textArea") {
+            const input = document.querySelector("#textContent")
+            input.value = ""
+        }
     }
     else if (target === null) {
+        const input = document.querySelector("#textContent")
+        input.value = ""
         widthInput.value = 0
         heightInput.value = 0
     }
@@ -335,4 +342,28 @@ const exportToJsonFile = (data) => {
 
     document.body.removeChild(link);
     URL.revokeObjectURL(url);
+};
+
+
+export const changeBorder = (color) => {
+    const selected = getSelectedElement();
+    if (!selected) return;
+
+    // 1. Update state (without re-render)
+    updateElement(
+        selected.id,
+        { border: `1px solid ${color}` },
+        { render: false }
+    );
+
+    // 2. Find element in canvas and update DOM
+    const canvas = document.querySelector("#canvas");
+    if (!canvas) return;
+
+    for (const child of canvas.children) {
+        if (child.dataset.id === selected.id) {
+            child.style.border = `1px solid ${color}`;
+            break;
+        }
+    }
 };
