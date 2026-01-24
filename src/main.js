@@ -314,6 +314,7 @@ export const renderCanvas = () => {
             div.style.left = `${element.x}px`;
             div.style.top = `${element.y}px`;
             div.style.backgroundColor = element.backgroundColor || ""
+            div.style.transform = `rotate(${element.rotation}deg)`;
             div.style.width = `${element.width}px`;
             div.style.height = `${element.height}px`;
             div.style.zIndex = element.zIndex;

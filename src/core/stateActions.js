@@ -268,7 +268,7 @@ export const rotateLeft = () => {
     updateElement(selected.id, { rotation: rotation }, { render: false })
 
     const item = canvas.querySelector(`[data-id="${selected.id}"]`);
-    console.log
+    console.log(editorState.elements, "after saving the rotation")
     item.style.transform = `rotate(${rotation}deg)`;
     saveState()
 
