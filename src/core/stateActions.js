@@ -50,6 +50,7 @@ export const createElement = (type) => {
     widthInput.style.color = "black"
     // console.log(element)
     createLayerCard(`${element.type} ${element.zIndex}`, element.id)
+    saveState()
     return element;
 };
 
@@ -85,6 +86,7 @@ export const selectElement = (id) => {
 
     renderCanvas()
     changeLayerFocus(editorState.selectedElementId, previous)
+    saveState()
 };
 
 // This function is to delete a state
@@ -97,6 +99,7 @@ export const removeElement = (id) => {
     }
     deleteLayer(id)
     renderCanvas()
+    saveState()
 };
 
 // Function to update some property of of the object
@@ -109,6 +112,7 @@ export const updateElement = (id, updates, options = {}) => {
     if (options.render !== false) {
         renderCanvas();
     }
+    saveState()
 };
 
 export const getSelectedElement = () => {
@@ -140,6 +144,7 @@ const changeLayerFocus = (id, previous) => {
             }
         }
     }
+    saveState()
 };
 
 export const deleteLayer = (id) => {
@@ -157,6 +162,7 @@ export const deleteLayer = (id) => {
             span.innerText = `${item.type} ${item.zIndex}`
         }
     })
+    saveState()
 }
 
 export const changeLayerUP = (id, action, index) => {
@@ -200,8 +206,8 @@ export const changeLayerUP = (id, action, index) => {
     if (currentCardEl && siblingCardEl) {
         layerContainer.insertBefore(currentCardEl, siblingCardEl);
     }
+    saveState()
 };
-
 
 export const changeLayerDown = (id, action, index) => {
     if (action !== "down") return;
@@ -253,8 +259,8 @@ export const changeLayerDown = (id, action, index) => {
     if (currentCardEl && siblingCardEl) {
         layerContainer.insertBefore(siblingCardEl, currentCardEl);
     }
+    saveState()
 };
-
 
 export const rotateLeft = () => {
     const selected = getSelectedElement()
@@ -262,8 +268,9 @@ export const rotateLeft = () => {
     updateElement(selected.id, { rotation: rotation }, { render: false })
 
     const item = canvas.querySelector(`[data-id="${selected.id}"]`);
-    console.log
+    console.log(editorState.elements, "after saving the rotation")
     item.style.transform = `rotate(${rotation}deg)`;
+    saveState()
 
 }
 
@@ -280,12 +287,52 @@ export const rotateRight = () => {
     if (!item) return;
 
     item.style.transform = `rotate(${rotation}deg)`;
+    saveState()
 };
 
 
 export const handleDeleteAll = () => {
     editorState.elements = []
     const layerContainer = document.querySelector("#layerContainer")
-    layerContainer.innerHTML=""
+    layerContainer.innerHTML = ""
     renderCanvas()
 }
+
+const saveState = () => {
+    const state = editorState
+    console.log(JSON.stringify(state))
+    localStorage.setItem("editorState", JSON.stringify(state));
+};
+
+export const autoFetchFromSavedState = () => {
+    const savedState = localStorage.getItem("editorState")
+    console.log("this is saved state", savedState)
+    let parsedState = JSON.parse(savedState)
+    editorState.elements = parsedState.elements
+    editorState.selectedElementId = parsedState.selectedElementId
+    renderCanvas()
+    editorState.elements.forEach((item) => { createLayerCard(`${item.type} ${item.zIndex}`, item.id) })
+}
+
+
+const exportToJsonFile = (data) => {
+
+    const jsonString = JSON.stringify(data, null, 2);
+    const blob = new Blob([jsonString], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+
+
+    const link = document.createElement("a");
+    link.href = url;
+
+
+    link.download = "devcraft-project.txt";
+
+
+    document.body.appendChild(link);
+    link.click();
+
+
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+};

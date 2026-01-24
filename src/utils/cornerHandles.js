@@ -35,14 +35,15 @@ export const addCornerHandles = (parent) => {
         const handle = document.createElement("div");
         handle.dataset.handle = p.id
         handle.className = `
-            absolute w-3 h-3 bg-white
-            border border-black 
-            ${p.side}
-            ${p.cls}
-            ${p.translate}
-            ${p.cursor}
-            rounded-full
-        `;
+    absolute w-3 h-3
+    ${p.id === "top-right" ? "bg-green-500" : "bg-white"}
+    border border-black 
+    ${p.side}
+    ${p.cls}
+    ${p.translate}
+    ${p.cursor}
+    rounded-full
+`;
 
         parent.appendChild(handle);
     });

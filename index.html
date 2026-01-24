@@ -10,111 +10,153 @@
 </head>
 
 <body>
-    <div class="flex">
+    <div class="flex h-screen w-screen overflow-hidden items-stretch">
 
-        <!-- Section for side bar -->
-        <div class="flex min-h-screen bg-gray-100">
-            <aside class="w-56 bg-[#f3f3f3] border-r border-gray-300 flex flex-col justify-between p-4">
+        <div class="flex h-full bg-gray-100 shrink-0">
+            <aside class="w-56 h-full bg-[#f3f3f3] border-r border-gray-300
+                 flex flex-col justify-between p-4 overflow-y-auto custom-scrollbar">
 
-                <!-- Paste things here for alingment -->
                 <div class="space-y-3">
-                    <button id="addRectangle" class="w-full py-2 rounded-xl bg-white hover:bg-gray-200 shadow text-sm">
-                        Rectangle
-                    </button>
-                    <button id="textBox" class="w-full py-2 rounded-xl bg-white hover:bg-gray-200 shadow text-sm">
-                        Text Box
-                    </button>
-                    <button id="addCircle" class="w-full py-2 rounded-xl bg-white hover:bg-gray-200 shadow text-sm">
-                        Circle
-                    </button>
-                    <button id="rotateLeft" class="w-full py-2 rounded-xl bg-white hover:bg-gray-200 shadow text-sm">
-                        Rotate Left
-                    </button>
-                    <button id="rotateRight" class="w-full py-2 rounded-xl bg-white hover:bg-gray-200 shadow text-sm">
-                        Rotate Right
-                    </button>
-                    <div id="colorContainer"
-                        class="w-full max-w-5xl mx-auto bg-white p-4 rounded-lg shadow flex flex-wrap gap-4">
+                    <div class="grid grid-cols-2 gap-2 p-2">
+                        <button id="addRectangle" title="Add Rectangle"
+                            class="flex items-center justify-center p-3 rounded-xl bg-white hover:bg-gray-200 shadow transition-colors">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <rect width="18" height="18" x="3" y="3" rx="2" />
+                            </svg>
+                        </button>
+                    
+                        <button id="textBox" title="Add Text Box"
+                            class="flex items-center justify-center p-3 rounded-xl bg-white hover:bg-gray-200 shadow transition-colors">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M4 7V4h16v3" />
+                                <path d="M9 20h6" />
+                                <path d="M12 4v16" />
+                            </svg>
+                        </button>
+                    
+                        <button id="addCircle" title="Add Circle"
+                            class="flex items-center justify-center p-3 rounded-xl bg-white hover:bg-gray-200 shadow transition-colors">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="12" cy="12" r="10" />
+                            </svg>
+                        </button>
+                    
+                        <div class="hidden sm:block"></div>
+                    
+                        <button id="rotateLeft" title="Rotate Left"
+                            class="flex items-center justify-center p-3 rounded-xl bg-white hover:bg-gray-200 shadow transition-colors">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" />
+                                <path d="M3 3v5h5" />
+                            </svg>
+                        </button>
+                    
+                        <button id="rotateRight" title="Rotate Right"
+                            class="flex items-center justify-center p-3 rounded-xl bg-white hover:bg-gray-200 shadow transition-colors">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8" />
+                                <path d="M21 3v5h-5" />
+                            </svg>
+                        </button>
+                    </div>
 
-
-                        <div id="red-chip" data-color="red" data-value="#ef4444"
-                            class="w-10 h-10 rounded-full bg-red-500 cursor-pointer">
-                        </div>
-
-                        <div id="blue-chip" data-color="blue" data-value="#3b82f6"
-                            class="w-10 h-10 rounded-full bg-blue-500 cursor-pointer"></div>
-
-                        <div id="green-chip" data-color="green" data-value="#22c55e"
-                            class="w-10 h-10 rounded-full bg-green-500 cursor-pointer"></div>
-
-                        <div id="yellow-chip" data-color="yellow" data-value="#eab308"
-                            class="w-10 h-10 rounded-full bg-yellow-400 cursor-pointer"></div>
-
-                        <div id="purple-chip" data-color="purple" data-value="#a855f7"
-                            class="w-10 h-10 rounded-full bg-purple-500 cursor-pointer"></div>
-                        <div id="pink-chip" data-color="transparent_1px" data-value="transparent_1px" class="w-10 h-10 rounded-full border border-gray-400 cursor-pointer
-                        bg-[linear-gradient(45deg,#ccc_25%,transparent_25%,transparent_75%,#ccc_75%,#ccc)]
-                        bg-[length:8px_8px]">
+                    <div class="mt-4 border-t pt-4">
+                        <h3 class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3">Border Color</h3>
+                    
+                        <div class="grid grid-cols-3 gap-2">
+                            <button id="borderColorTransparent" title="Transparent"
+                                class="flex items-center justify-center h-10 w-full rounded-lg bg-white border border-gray-200 hover:bg-gray-100 shadow-sm transition-all relative overflow-hidden">
+                                <div class="w-full h-[2px] bg-red-500 rotate-45 absolute"></div>
+                            </button>
+                    
+                            <button id="borderColorBlack" title="Black"
+                                class="h-10 w-full rounded-lg bg-black border border-gray-300 hover:opacity-80 shadow-sm transition-all"></button>
+                    
+                            <button id="borderColorRed" title="Red"
+                                class="h-10 w-full rounded-lg bg-red-500 border border-gray-100 hover:opacity-80 shadow-sm transition-all"></button>
+                    
+                            <button id="borderColorBlue" title="Blue"
+                                class="h-10 w-full rounded-lg bg-blue-500 border border-gray-100 hover:opacity-80 shadow-sm transition-all"></button>
+                    
+                            <button id="borderColorGreen" title="Green"
+                                class="h-10 w-full rounded-lg bg-emerald-500 border border-gray-100 hover:opacity-80 shadow-sm transition-all"></button>
+                    
+                            <button id="borderColorYellow" title="Yellow"
+                                class="h-10 w-full rounded-lg bg-yellow-400 border border-gray-100 hover:opacity-80 shadow-sm transition-all"></button>
                         </div>
                     </div>
-                    <div class="w-full max-w-5xl mx-auto  flex flex-col gap-4">
 
-                        <!-- Width Section -->
+                    <div id="colorContainer"
+                        class="w-full max-w-5xl mx-auto bg-white p-4 rounded-lg shadow flex flex-wrap gap-4">
+                        <div id="red-chip" data-color="red" data-value="#ef4444"
+                            class="w-10 h-10 rounded-full bg-red-500 cursor-pointer"></div>
+                        <div id="blue-chip" data-color="blue" data-value="#3b82f6"
+                            class="w-10 h-10 rounded-full bg-blue-500 cursor-pointer"></div>
+                        <div id="green-chip" data-color="green" data-value="#22c55e"
+                            class="w-10 h-10 rounded-full bg-green-500 cursor-pointer"></div>
+                        <div id="yellow-chip" data-color="yellow" data-value="#eab308"
+                            class="w-10 h-10 rounded-full bg-yellow-400 cursor-pointer"></div>
+                        <div id="purple-chip" data-color="purple" data-value="#a855f7"
+                            class="w-10 h-10 rounded-full bg-purple-500 cursor-pointer"></div>
+                        <div id="pink-chip" data-color="transparent_1px" data-value="transparent_1px"
+                            class="w-10 h-10 rounded-full border border-gray-400 cursor-pointer bg-[linear-gradient(45deg,#ccc_25%,transparent_25%,transparent_75%,#ccc_75%,#ccc)] bg-[length:8px_8px]">
+                        </div>
+                    </div>
+
+                    <div class="w-full max-w-5xl mx-auto flex flex-col gap-4">
                         <div class="bg-white p-4 rounded-lg shadow">
-                            <h2 class="text-sm font-semibold text-gray-700 mb-2">
-                                Width (px)
-                            </h2>
+                            <h2 class="text-sm font-semibold text-gray-700 mb-2">Width (px)</h2>
                             <input id="setWidth" type="number" placeholder="0px"
                                 class="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" />
                         </div>
-
-                        <!-- Height Section -->
                         <div class="bg-white p-4 rounded-lg shadow">
-                            <h2 class="text-sm font-semibold text-gray-700 mb-2">
-                                Height (px)
-                            </h2>
+                            <h2 class="text-sm font-semibold text-gray-700 mb-2">Height (px)</h2>
                             <input type="number" id="setHeight" placeholder="0px"
                                 class="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" />
                         </div>
+                    </div>
 
+                    <div class="w-full max-w-5xl mx-auto py-2">
+                        <div class="bg-white p-4 rounded-lg shadow">
+                            <h2 class="text-sm font-semibold text-gray-700 mb-2">Text Content</h2>
+                            <input type="text" id="textContent" placeholder="Enter text content"
+                                class="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                        </div>
                     </div>
                 </div>
 
-
-                <div class="w-full max-w-5xl mx-auto">
-                    <div class="bg-white p-4 rounded-lg shadow">
-                        <h2 class="text-sm font-semibold text-gray-700 mb-2">
-                            Text Content
-                        </h2>
-                        <input type="text" id="textContent" placeholder="Enter text content" class="w-full border border-gray-300 rounded-md px-3 py-2 text-sm
-                             focus:outline-none focus:ring-2 focus:ring-blue-500" />
-                    </div>
-                </div>
-
-                <div class="space-y-3">
+                <div class="space-y-3 mt-6">
                     <button id="deleteAll"
                         class="w-full py-2 rounded-xl bg-red-50 text-red-600 hover:bg-red-100 shadow text-sm">
                         Delete All
                     </button>
-                    <button class="w-full py-2 rounded-xl bg-black text-white hover:bg-gray-800 shadow text-sm">
-                        Export
-                    </button>
+                    <div class="w-full flex gap-2">
+                        <button id="exportJSON"
+                            class="w-full py-2 px-2 rounded-xl bg-black text-white hover:bg-gray-800 shadow text-sm">
+                            Export JSON
+                        </button>
+                        <button id="exportHTML"
+                            class="w-full py-2 rounded-xl bg-black text-white hover:bg-gray-800 shadow text-sm">
+                            Export HTML
+                        </button>
+                    </div>
                 </div>
-
             </aside>
         </div>
-        <!-- Sidebar ends here -->
 
-        <!-- Canvas for drawing everything -->
-        <div id="canvas" tabindex="0" class="relative w-screen h-screen bg-[#f8f8f8] shadow-md overflow-hidden
+        <div id="canvas" tabindex="0" class="flex-grow relative bg-[#f8f8f8] shadow-md overflow-hidden
                      bg-[radial-gradient(#d1d1d1_1px,transparent_1px)]
                      bg-[length:24px_24px]">
         </div>
 
-
-        <div class="flex min-h-screen bg-gray-100">
-            <aside id="layerContainer" class="w-56 bg-[#f3f3f3] border-l border-gray-300 flex flex-col p-4">
-
+        <div class="flex h-full bg-gray-100 shrink-0">
+            <aside id="layerContainer"
+                class="w-56 h-full bg-[#f3f3f3] border-l border-gray-300 flex flex-col p-4 overflow-y-auto custom-scrollbar">
             </aside>
         </div>
     </div>

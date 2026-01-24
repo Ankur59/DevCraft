@@ -1,5 +1,5 @@
 import { editorState } from "./core/state.js";
-import { changeLayerDown, changeLayerUP, createElement, deleteLayer, getSelectedElement, handleDeleteAll, removeElement, rotateLeft, rotateRight, selectElement, updateElement } from "./core/stateActions.js";
+import { autoFetchFromSavedState, changeLayerDown, changeLayerUP, createElement, deleteLayer, getSelectedElement, handleDeleteAll, removeElement, rotateLeft, rotateRight, selectElement, updateElement } from "./core/stateActions.js";
 import { startResizeBottomLeft, startResizeBottomRight, startResizeTopLeft, startResizeTopRight } from "./ListenerFunctions/Resize.js";
 import { handleRotate } from "./utils/centerHandler.js";
 import { addCornerHandles } from "./utils/cornerHandles.js";
@@ -73,6 +73,10 @@ document.addEventListener("keydown", (e) => {
 });
 const deleteAll = document.querySelector("#deleteAll")
 
+document.addEventListener("DOMContentLoaded", () => {
+    autoFetchFromSavedState()
+});
+
 deleteAll.addEventListener("click", () => {
     const ok = confirm("Are you sure you want to delete all elements? Note- It can't be recovered");
 
@@ -83,6 +87,7 @@ deleteAll.addEventListener("click", () => {
         console.log("User cancelled");
     }
 })
+
 rotateL.addEventListener("click", (e) => {
     rotateLeft()
 })
@@ -308,6 +313,8 @@ export const renderCanvas = () => {
             div.style.position = "absolute";
             div.style.left = `${element.x}px`;
             div.style.top = `${element.y}px`;
+            div.style.backgroundColor = element.backgroundColor || ""
+            div.style.transform = `rotate(${element.rotation}deg)`;
             div.style.width = `${element.width}px`;
             div.style.height = `${element.height}px`;
             div.style.zIndex = element.zIndex;
@@ -437,10 +444,74 @@ addCircle.addEventListener("click", () => {
 colorContainer.addEventListener("click", (e) => {
     if (e.srcElement.dataset.color) {
         const element = getSelectedElement()
+        console.log(element)
         if (element) {
             updateElement(element.id, { backgroundColor: e.srcElement.dataset.color })
         }
     }
 })
 
+const exportJSONBtn = document.getElementById('exportJSON');
 
+//Listener for exporting canvas content as JSON in a txt file
+exportJSONBtn.addEventListener('click', () => {
+    const dataString = JSON.stringify(editorState, null, 2);
+    const blob = new Blob([dataString], { type: 'text/plain' });
+    const url = URL.createObjectURL(blob);
+
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = 'devcraft-state.txt';
+
+    document.body.appendChild(link);
+    link.click();
+
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+});
+
+
+const exportHTMLBtn = document.querySelector("#exportHTML");
+
+// Listener for expoting the canvas content in HTML format
+exportHTMLBtn.addEventListener('click', () => {
+    const canvasContent = document.getElementById('canvas').innerHTML;
+
+    const fullHtml = `
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DevCraft Export</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body { margin: 0; padding: 0; overflow: hidden; background-color: #f8f8f8; }
+        #exported-canvas { 
+            position: relative; 
+            width: 100vw; 
+            height: 100vh; 
+        }
+        /* Ensure specific styles not handled by Tailwind (like rotations) persist */
+        .canvas-element { position: absolute; }
+    </style>
+</head>
+<body>
+    <div id="exported-canvas">
+        ${canvasContent}
+    </div>
+</body>
+</html>`;
+
+    const blob = new Blob([fullHtml], { type: 'text/html' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+
+    link.href = url;
+    link.download = 'devcraft-project.html';
+    document.body.appendChild(link);
+    link.click();
+
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+});
